@@ -40,6 +40,8 @@ A Docker-based monitoring solution for Storj storage nodes that collects disk sp
    ```yaml
    services:
      storage-node-graphs:
+       ports: !override
+         - "8080:80"
        environment:
          - STORAGE_NODES=node1:14002,node2:14002,node3:14002
    ```
