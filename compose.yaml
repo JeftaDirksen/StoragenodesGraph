@@ -1,5 +1,5 @@
 services:
-  storage-node-graphs:
+  storage-nodes-graph:
     build: .
     ports:
       - "8080:80"

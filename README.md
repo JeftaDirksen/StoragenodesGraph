@@ -39,7 +39,7 @@ A Docker-based monitoring solution for Storj storage nodes that collects disk sp
    Or create a `compose.override.yaml` file (recommended):
    ```yaml
    services:
-     storage-node-graphs:
+     storage-nodes-graph:
        ports: !override
          - "8080:80"
        environment:
@@ -163,7 +163,7 @@ The graphs feature a dark theme with:
 - Ensure storage nodes are accessible from the container
 - Check that nodes are responding on port 14002
 - Verify the API endpoints are correct
-- Check collector logs: `docker compose logs storage-node-graphs`
+- Check collector logs: `docker compose logs storage-nodes-graph`
 
 ### Graph not updating
 
@@ -183,17 +183,17 @@ The graphs feature a dark theme with:
 ### Building the image manually
 
 ```bash
-docker build -t storage-node-graphs .
+docker build -t storage-nodes-graph .
 ```
 
 ### Running the collector manually
 
 ```bash
-docker compose run --rm storage-node-graphs php /var/www/html/collector.php
+docker compose run --rm storage-nodes-graph php /var/www/html/collector.php
 ```
 
 ### Viewing logs
 
 ```bash
-docker compose logs -f storage-node-graphs
+docker compose logs -f storage-nodes-graph
 ```
