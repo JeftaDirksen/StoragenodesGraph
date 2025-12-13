@@ -22,7 +22,7 @@ A Docker-based monitoring solution for Storj storage nodes that collects disk sp
 1. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd StorageNodeGraphs
+   cd StorageNodesGraph
    ```
 
 2. **Configure your storage nodes**:
@@ -113,7 +113,7 @@ The RRD database is stored in the `./data` directory (mounted as a volume) and p
 ## File Structure
 
 ```
-StorageNodeGraphs/
+StorageNodesGraph/
 ├── collector.php          # Data collection script
 ├── index.php              # Web interface
 ├── entrypoint.sh          # Container startup script
