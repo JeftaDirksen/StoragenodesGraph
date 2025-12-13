@@ -1,5 +1,11 @@
 <?php
 
+// Only allow running from command line
+if (php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    die('This script can only be run from the command line.');
+}
+
 // Load nodes from environment variable
 $nodesEnv = getenv('STORAGE_NODES');
 if ($nodesEnv === false || empty($nodesEnv)) {
