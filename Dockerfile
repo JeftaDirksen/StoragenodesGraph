@@ -6,6 +6,7 @@ WORKDIR /var/www/html
 
 COPY *.php ./
 COPY --chmod=+x entrypoint.sh ./
+COPY favicon.png ./
 
 EXPOSE 80
 
