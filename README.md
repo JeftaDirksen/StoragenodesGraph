@@ -6,10 +6,10 @@ A Docker-based monitoring solution for Storj storage nodes that collects disk sp
 
 - **Automatic Data Collection**: Polls multiple Storj storage nodes every 5 minutes
 - **RRD Database**: Stores historical data with multiple retention policies (1 day, 1 week, 1 year)
-- **Visual Graphs**: Generates PNG graphs showing disk space usage and expected earnings over time
-- **Web Interface**: Simple HTML page with auto-refresh every minute
+- **Visual Graphs**: Generates PNG graphs showing disk space usage and expected earnings over time with dark theme
+- **Web Interface**: Simple HTML page with black background and auto-refresh every minute
 - **Docker-Based**: Easy deployment using Docker Compose
-- **Configurable**: Environment variables for nodes and graph history
+- **Configurable**: Environment variables for nodes, graph history, and graph dimensions
 
 ## Requirements
 
@@ -27,11 +27,13 @@ A Docker-based monitoring solution for Storj storage nodes that collects disk sp
 
 2. **Configure your storage nodes**:
    
-   Edit `compose.yaml` and set the `STORAGE_NODES` environment variable:
+   Edit `compose.yaml` and set the environment variables:
    ```yaml
    environment:
      - STORAGE_NODES=node1:14002,node2:14002,node3:14002
      - GRAPH_HISTORY=60d
+     - GRAPH_WIDTH=1200
+     - GRAPH_HEIGHT=600
    ```
    
    Or create a `compose.override.yaml` file (recommended):
@@ -59,6 +61,8 @@ A Docker-based monitoring solution for Storj storage nodes that collects disk sp
 |----------|-------------|---------|---------|
 | `STORAGE_NODES` | Comma-separated list of storage node addresses | Required | `node1:14002,node2:14002` |
 | `GRAPH_HISTORY` | Time period for graph display (minus sign added automatically) | `5weeks` | `60d`, `1y`, `720h` |
+| `GRAPH_WIDTH` | Graph width in pixels | `1200` | `900`, `1600` |
+| `GRAPH_HEIGHT` | Graph height in pixels | `600` | `400`, `800` |
 
 ### Graph History Format
 
@@ -125,11 +129,20 @@ StorageNodeGraphs/
 ## Web Interface
 
 The web interface (`index.php`) displays:
-- A graph showing disk space and earnings trends
+- A graph showing disk space and earnings trends with dark theme (black background)
 - Auto-refresh every 60 seconds
 - Current values displayed on the graph
+- Black background matching the graph theme
 
 Access it at `http://localhost:8080` (or your configured port).
+
+### Graph Appearance
+
+The graphs feature a dark theme with:
+- Black background and canvas
+- White text for labels and values
+- Dark gray grid lines for subtle visibility
+- Colorful data lines (green for available space, blue for used space, orange for earnings)
 
 ## Troubleshooting
 

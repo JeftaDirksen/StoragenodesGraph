@@ -74,8 +74,22 @@ $graphHistory = getenv('GRAPH_HISTORY');
 if ($graphHistory === false || empty($graphHistory)) {
     $graphHistory = '5weeks'; // Default to 5 weeks
 }
+$graphWidth = getenv('GRAPH_WIDTH');
+if ($graphWidth === false || empty($graphWidth)) {
+    $graphWidth = '1200'; // Default width
+}
+$graphHeight = getenv('GRAPH_HEIGHT');
+if ($graphHeight === false || empty($graphHeight)) {
+    $graphHeight = '600'; // Default height
+}
 $graphCommand = "rrdtool graph $graphFile "
+    . "--width $graphWidth --height $graphHeight "
     . "--start -$graphHistory --end now "
+    . "--color BACK#000000 "
+    . "--color CANVAS#000000 "
+    . "--color FONT#FFFFFF "
+    . "--color GRID#333333 "
+    . "--color MGRID#666666 "
     . "--title='Disk Space & Expected Earnings' "
     . "--vertical-label='TB / USD' "
     . "DEF:avail=$rrddb:diskAvail:AVERAGE "
