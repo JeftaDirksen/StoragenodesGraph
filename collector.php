@@ -25,9 +25,9 @@ if (!file_exists($rrddb)) {
         . "DS:diskAvail:GAUGE:600:0:U "
         . "DS:diskUsed:GAUGE:600:0:U "
         . "DS:monthExpect:GAUGE:600:0:U "
-        . "RRA:AVERAGE:0.5:1:288 "
-        . "RRA:AVERAGE:0.5:12:168 "
-        . "RRA:AVERAGE:0.5:288:365";
+        . "RRA:LAST:0.5:1:288 "
+        . "RRA:LAST:0.5:12:168 "
+        . "RRA:LAST:0.5:288:365";
     exec($command, $output, $return_var);
     if ($return_var !== 0) {
         echo "Failed to create RRD database: ", implode("\n", $output), PHP_EOL;
@@ -92,9 +92,9 @@ $graphCommand = "rrdtool graph $graphFile "
     . "--color MGRID#666666 "
     . "--title='Disk Space & Expected Earnings' "
     . "--vertical-label='TB / USD' "
-    . "DEF:avail=$rrddb:diskAvail:AVERAGE "
-    . "DEF:used=$rrddb:diskUsed:AVERAGE "
-    . "DEF:expect=$rrddb:monthExpect:AVERAGE "
+    . "DEF:avail=$rrddb:diskAvail:LAST "
+    . "DEF:used=$rrddb:diskUsed:LAST "
+    . "DEF:expect=$rrddb:monthExpect:LAST "
     . "LINE1:avail#00FF00:'Disk Available (TB)' "
     . "LINE1:used#0000FF:'Disk Used (TB)' "
     . "LINE2:expect#FF9900:'Month Earnings (\$)' "
