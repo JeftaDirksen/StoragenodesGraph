@@ -32,8 +32,8 @@ if (!file_exists($rrddb)) {
         . "DS:diskUsed:GAUGE:600:0:U "
         . "DS:monthExpect:GAUGE:600:0:U "
         . "RRA:LAST:0.5:1:288 "
-        . "RRA:LAST:0.5:12:168 "
-        . "RRA:LAST:0.5:288:365";
+        . "RRA:AVERAGE:0.5:12:168 "
+        . "RRA:AVERAGE:0.5:288:365";
     exec($command, $output, $return_var);
     if ($return_var !== 0) {
         echo "Failed to create RRD database: ", implode("\n", $output), PHP_EOL;
@@ -106,8 +106,8 @@ $graphCommand = "rrdtool graph $graphFile "
     . "LINE2:expect#FF9900:'Month Earnings (\$)' "
     . "COMMENT:'\\n' "
     . "GPRINT:avail:LAST:'Avail Now\: %6.2lf TB' "
-    . "GPRINT:used:LAST:'Used Now\: %6.2lf TB' "
-    . "GPRINT:expect:LAST:'Earn Now\: \$%6.2lf\\n'";
+    . "GPRINT:used:AVERAGE:'Used Now\: %6.2lf TB' "
+    . "GPRINT:expect:AVERAGE:'Earn Now\: \$%6.2lf\\n'";
 exec($graphCommand, $graphOutput, $graphReturnVar);
 if ($graphReturnVar !== 0) {
     echo "Failed to generate RRD graph: ", implode("\n", $graphOutput), PHP_EOL;
