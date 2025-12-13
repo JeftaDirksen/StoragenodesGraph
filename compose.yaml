@@ -1,0 +1,11 @@
+services:
+  storage-node-graphs:
+    build: .
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+    environment:
+      - STORAGE_NODES=storagenode1:14002,storagenode2:14002
+
