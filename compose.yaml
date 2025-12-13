@@ -8,4 +8,4 @@ services:
       - ./data:/data
     environment:
       - STORAGE_NODES=storagenode1:14002,storagenode2:14002
-
+      - GRAPH_HISTORY=5weeks

@@ -70,9 +70,13 @@ if ($updateReturnVar !== 0) {
 
 // Generate RRDtool graph
 $graphFile = 'graph.png';
+$graphHistory = getenv('GRAPH_HISTORY');
+if ($graphHistory === false || empty($graphHistory)) {
+    $graphHistory = '5weeks'; // Default to 5 weeks
+}
 $graphCommand = "rrdtool graph $graphFile "
-    . "--start -60d --end now "
-    . "--title='Disk Space & Expected Earnings (Last 2 months)' "
+    . "--start -$graphHistory --end now "
+    . "--title='Disk Space & Expected Earnings' "
     . "--vertical-label='TB / USD' "
     . "DEF:avail=$rrddb:diskAvail:AVERAGE "
     . "DEF:used=$rrddb:diskUsed:AVERAGE "
