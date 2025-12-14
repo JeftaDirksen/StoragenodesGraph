@@ -108,13 +108,11 @@ The RRD database is stored in the `./data` directory (mounted as a volume) and p
   - `monthExpect` - Expected monthly earnings (USD)
 
 - **Round Robin Archives (RRA)**:
-  - 1-day resolution (5-minute intervals) - uses LAST consolidation
-  - 1-week resolution (1-hour intervals) - uses LAST consolidation
-  - 1-year resolution (1-day intervals) - uses LAST consolidation
+  - 1-day resolution (5-minute intervals)
+  - 1-week resolution (1-hour intervals)
+  - 1-year resolution (1-day intervals)
   
-  Note: All RRAs use the LAST consolidation function, which preserves the last value when condensing data rather than averaging.
-  
-  **Important**: If you have an existing RRD database and the RRA structure has changed, you'll need to delete the existing database (`./data/db.rrd`) for the changes to take effect. The database will be automatically recreated on the next collector run.
+   **Important**: If you have an existing RRD database and the RRA structure has changed, you'll need to delete the existing database (`./data/db.rrd`) for the changes to take effect. The database will be automatically recreated on the next collector run.
 
 ## File Structure
 

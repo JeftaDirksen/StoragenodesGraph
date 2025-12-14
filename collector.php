@@ -49,12 +49,16 @@ $currentMonthExpectations = 0;
 foreach ($nodes as $node) {
     $url = "http://$node/api/sno/";
     $data = curl($url);
-    $diskSpaceAvailable += $data['diskSpace']['available'];
-    $diskSpaceUsed += $data['diskSpace']['used'];
+    if ($data !== false) {
+        $diskSpaceAvailable += $data['diskSpace']['available'];
+        $diskSpaceUsed += $data['diskSpace']['used'];
+    }
 
     $url = "http://$node/api/sno/estimated-payout";
     $data = curl($url);
-    $currentMonthExpectations += $data['currentMonthExpectations'];
+    if ($data !== false) {
+        $currentMonthExpectations += $data['currentMonthExpectations'];
+    }
 }
 
 // Formatting
@@ -98,16 +102,16 @@ $graphCommand = "rrdtool graph $graphFile "
     . "--color MGRID#666666 "
     . "--title='Disk Space & Expected Earnings ($graphHistory)' "
     . "--vertical-label='TB / USD' "
-    . "DEF:avail=$rrddb:diskAvail:LAST "
-    . "DEF:used=$rrddb:diskUsed:LAST "
-    . "DEF:expect=$rrddb:monthExpect:LAST "
-    . "LINE1:avail#00FF00:'Disk Available (TB)' "
-    . "LINE1:used#0000FF:'Disk Used (TB)' "
+    . "DEF:avail=$rrddb:diskAvail:AVERAGE "
+    . "DEF:used=$rrddb:diskUsed:AVERAGE "
+    . "DEF:expect=$rrddb:monthExpect:AVERAGE "
+    . "LINE2:avail#00FF00:'Disk Available (TB)' "
+    . "LINE2:used#0000FF:'Disk Used (TB)' "
     . "LINE2:expect#FF9900:'Month Earnings (\$)' "
     . "COMMENT:'\\n' "
     . "GPRINT:avail:LAST:'Avail Now\: %6.2lf TB' "
-    . "GPRINT:used:AVERAGE:'Used Now\: %6.2lf TB' "
-    . "GPRINT:expect:AVERAGE:'Earn Now\: \$%6.2lf\\n'";
+    . "GPRINT:used:LAST:'Used Now\: %6.2lf TB' "
+    . "GPRINT:expect:LAST:'Earn Now\: \$%6.2lf\\n'";
 exec($graphCommand, $graphOutput, $graphReturnVar);
 if ($graphReturnVar !== 0) {
     echo "Failed to generate RRD graph: ", implode("\n", $graphOutput), PHP_EOL;
