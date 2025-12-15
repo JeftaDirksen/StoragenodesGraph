@@ -4,7 +4,8 @@ RUN apt-get update && apt-get install -y rrdtool
 
 WORKDIR /var/www/html
 
-COPY *.php ./
+COPY index.html ./
+COPY collector.php ./
 COPY --chmod=+x entrypoint.sh ./
 COPY favicon.png ./
 
