@@ -4,7 +4,7 @@ A Docker-based monitoring solution for Storj storage nodes that collects disk sp
 
 ## Features
 
-- **Automatic Data Collection**: Polls multiple Storj storage nodes every 5 minutes
+- **Automatic Data Collection**: Polls multiple Storj storage nodes every 15 minutes
 - **RRD Database**: Stores historical data with multiple retention policies (1 day, 1 week, 1 year)
 - **Visual Graphs**: Generates PNG graphs showing disk space usage and expected earnings over time with dark theme
 - **Web Interface**: Simple HTML page with black background and auto-refresh every minute
@@ -83,7 +83,7 @@ STORAGE_NODES=ssdstation:14002,cubi:14002,terramaster:14002
 
 ## Data Collection
 
-The collector script (`collector.php`) runs automatically every 5 minutes and:
+The collector script (`collector.php`) runs automatically every 15 minutes and:
 
 1. Queries each storage node's API endpoints:
    - `/api/sno/` - Disk space information
@@ -134,7 +134,7 @@ StorageNodesGraph/
 
 The web interface (`index.php`) displays:
 - A graph showing disk space and earnings trends with dark theme (black background)
-- Auto-refresh every 60 seconds
+- Auto-refresh every 5 minutes
 - Current values displayed on the graph
 - Black background matching the graph theme
 
@@ -165,8 +165,8 @@ The graphs feature a dark theme with:
 
 ### Graph not updating
 
-- The collector runs every 5 minutes
-- Wait at least 5 minutes after starting the container
+- The collector runs every 15 minutes
+- Wait at least 15 minutes after starting the container
 - Check that the RRD database is being updated
 - Verify file permissions on the `./data` directory
 

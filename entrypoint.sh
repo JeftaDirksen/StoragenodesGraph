@@ -16,12 +16,12 @@ trap cleanup SIGTERM SIGINT
 # Start collector in background (runs every 5 minutes)
 while true; do
     php /var/www/html/collector.php
-    sleep 300  # 5 minutes
+    sleep 900  # 15 minutes
 done &
 COLLECTOR_PID=$!
 
 # Wait a bit for initial data collection
-sleep 10
+sleep 5
 
 # Start Apache in foreground
 exec apache2-foreground

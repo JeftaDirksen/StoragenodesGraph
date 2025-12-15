@@ -27,13 +27,13 @@ $rrddb = '/data/db.rrd';
 
 // Create RRDDb if not exists
 if (!file_exists($rrddb)) {
-    $command = "rrdtool create $rrddb --step 300 "
-        . "DS:diskAvail:GAUGE:600:0:U "
-        . "DS:diskUsed:GAUGE:600:0:U "
-        . "DS:monthExpect:GAUGE:600:0:U "
-        . "RRA:LAST:0.5:1:288 "
-        . "RRA:AVERAGE:0.5:12:168 "
-        . "RRA:AVERAGE:0.5:288:365";
+    $command = "rrdtool create $rrddb --step 900 "
+        . "DS:diskAvail:GAUGE:1800:0:U "
+        . "DS:diskUsed:GAUGE:1800:0:U "
+        . "DS:monthExpect:GAUGE:1800:0:U "
+        . "RRA:LAST:0.5:1:96 "
+        . "RRA:AVERAGE:0.5:4:168 "
+        . "RRA:AVERAGE:0.5:96:365";
     exec($command, $output, $return_var);
     if ($return_var !== 0) {
         echo "Failed to create RRD database: ", implode("\n", $output), PHP_EOL;
