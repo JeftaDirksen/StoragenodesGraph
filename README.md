@@ -78,7 +78,7 @@ The `GRAPH_HISTORY` variable accepts RRDtool time formats. **Note**: The minus s
 
 Nodes should be specified as `hostname:port` or `ip:port`, separated by commas:
 ```
-STORAGE_NODES=ssdstation:14002,cubi:14002,terramaster:14002
+STORAGE_NODES=node1:14002,node2:14002,node3:14002
 ```
 
 ## Data Collection
