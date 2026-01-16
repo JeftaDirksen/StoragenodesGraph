@@ -52,12 +52,16 @@ foreach ($nodes as $node) {
     if ($data !== false) {
         $diskSpaceAvailable += $data['diskSpace']['available'];
         $diskSpaceUsed += $data['diskSpace']['used'];
+    } else {
+        echo "Failed to retrieve disk space data from node: $node", PHP_EOL;
     }
 
     $url = "http://$node/api/sno/estimated-payout";
     $data = curl($url);
     if ($data !== false) {
         $currentMonthExpectations += $data['currentMonthExpectations'];
+    } else {
+        echo "Failed to retrieve estimated payout data from node: $node", PHP_EOL;
     }
 }
 
@@ -120,8 +124,7 @@ if ($graphReturnVar !== 0) {
 }
 
 
-function curl($url)
-{
+function curl($url) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
