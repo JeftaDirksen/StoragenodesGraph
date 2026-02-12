@@ -1,5 +1,6 @@
 services:
   storage-nodes-graph:
+    container_name: storagenodesgraph
     build: .
     ports:
       - "8080:80"
