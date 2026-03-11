@@ -9,6 +9,9 @@ services:
       - ./data:/data
     environment:
       - STORAGE_NODES=storagenode1:14002,storagenode2:14002
-      - GRAPH_HISTORY=5weeks
-      - GRAPH_WIDTH=1200
-      - GRAPH_HEIGHT=600
+      - GRAPH1_HISTORY=1week
+      - GRAPH1_WIDTH=1000
+      - GRAPH1_HEIGHT=250
+      - GRAPH2_HISTORY=5weeks
+      - GRAPH2_WIDTH=1000
+      - GRAPH2_HEIGHT=250

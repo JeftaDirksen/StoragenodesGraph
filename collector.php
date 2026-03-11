@@ -82,47 +82,48 @@ if ($updateReturnVar !== 0) {
     echo "Failed to update RRD database: ", implode("\n", $updateOutput), PHP_EOL;
 }
 
-// Generate RRDtool graph
-$graphFile = 'graph.png';
-$graphHistory = getenv('GRAPH_HISTORY');
-if ($graphHistory === false || empty($graphHistory)) {
-    $graphHistory = '5weeks'; // Default to 5 weeks
+// Generate 2 RRDtool graphs
+for ($i = 1; $i <= 2; $i++) {
+    $graphFile = "graph$i.png";
+    $graphHistory = getenv("GRAPH" . $i . "_HISTORY");
+    if ($graphHistory === false || empty($graphHistory)) {
+        $graphHistory = '5weeks'; // Default to 5 weeks
+    }
+    $graphWidth = getenv("GRAPH" . $i . "_WIDTH");
+    if ($graphWidth === false || empty($graphWidth)) {
+        $graphWidth = '1200'; // Default width
+    }
+    $graphHeight = getenv("GRAPH" . $i . "_HEIGHT");
+    if ($graphHeight === false || empty($graphHeight)) {
+        $graphHeight = '600'; // Default height
+    }
+    $graphCommand = "rrdtool graph $graphFile "
+        . "--width $graphWidth --height $graphHeight "
+        . "--start -$graphHistory --end now "
+        . "--color BACK#000000 "
+        . "--color CANVAS#000000 "
+        . "--color FONT#FFFFFF "
+        . "--color GRID#333333 "
+        . "--color MGRID#666666 "
+        . "--title='Disk Space & Expected Earnings ($graphHistory)' "
+        . "--vertical-label='TB / USD' "
+        . "DEF:avail=$rrddb:diskAvail:AVERAGE "
+        . "DEF:used=$rrddb:diskUsed:AVERAGE "
+        . "DEF:expect=$rrddb:monthExpect:AVERAGE "
+        . "LINE2:avail#00FF00:'Disk Available (TB)' "
+        . "LINE2:used#0000FF:'Disk Used (TB)' "
+        . "LINE2:expect#FF9900:'Month Earnings (\$)' "
+        . "COMMENT:'\\n' "
+        . "GPRINT:avail:LAST:'Avail Now\: %6.2lf TB' "
+        . "GPRINT:used:LAST:'Used Now\: %6.2lf TB' "
+        . "GPRINT:expect:LAST:'Earn Now\: \$%6.2lf\\n'";
+    exec($graphCommand, $graphOutput, $graphReturnVar);
+    if ($graphReturnVar !== 0) {
+        echo "Failed to generate RRD graph: ", implode("\n", $graphOutput), PHP_EOL;
+    } else {
+        echo "Graph generated: $graphFile", PHP_EOL;
+    }
 }
-$graphWidth = getenv('GRAPH_WIDTH');
-if ($graphWidth === false || empty($graphWidth)) {
-    $graphWidth = '1200'; // Default width
-}
-$graphHeight = getenv('GRAPH_HEIGHT');
-if ($graphHeight === false || empty($graphHeight)) {
-    $graphHeight = '600'; // Default height
-}
-$graphCommand = "rrdtool graph $graphFile "
-    . "--width $graphWidth --height $graphHeight "
-    . "--start -$graphHistory --end now "
-    . "--color BACK#000000 "
-    . "--color CANVAS#000000 "
-    . "--color FONT#FFFFFF "
-    . "--color GRID#333333 "
-    . "--color MGRID#666666 "
-    . "--title='Disk Space & Expected Earnings ($graphHistory)' "
-    . "--vertical-label='TB / USD' "
-    . "DEF:avail=$rrddb:diskAvail:AVERAGE "
-    . "DEF:used=$rrddb:diskUsed:AVERAGE "
-    . "DEF:expect=$rrddb:monthExpect:AVERAGE "
-    . "LINE2:avail#00FF00:'Disk Available (TB)' "
-    . "LINE2:used#0000FF:'Disk Used (TB)' "
-    . "LINE2:expect#FF9900:'Month Earnings (\$)' "
-    . "COMMENT:'\\n' "
-    . "GPRINT:avail:LAST:'Avail Now\: %6.2lf TB' "
-    . "GPRINT:used:LAST:'Used Now\: %6.2lf TB' "
-    . "GPRINT:expect:LAST:'Earn Now\: \$%6.2lf\\n'";
-exec($graphCommand, $graphOutput, $graphReturnVar);
-if ($graphReturnVar !== 0) {
-    echo "Failed to generate RRD graph: ", implode("\n", $graphOutput), PHP_EOL;
-} else {
-    echo "Graph generated: $graphFile", PHP_EOL;
-}
-
 
 function curl($url) {
     $ch = curl_init($url);

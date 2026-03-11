@@ -6,8 +6,8 @@ A Docker-based monitoring solution for Storj storage nodes that collects disk sp
 
 - **Automatic Data Collection**: Polls multiple Storj storage nodes every 15 minutes
 - **RRD Database**: Stores historical data with multiple retention policies (1 day, 1 week, 1 year)
-- **Visual Graphs**: Generates PNG graphs showing disk space usage and expected earnings over time with dark theme
-- **Web Interface**: Simple HTML page with black background and auto-refresh every minute
+- **Visual Graphs**: Generates two PNG graphs (disk-space and earnings) with dark theme
+- **Web Interface**: Simple HTML page displaying both graphs with black background and auto-refresh every 5 minutes
 - **Docker-Based**: Easy deployment using Docker Compose
 - **Configurable**: Environment variables for nodes, graph history, and graph dimensions
 
@@ -62,13 +62,17 @@ A Docker-based monitoring solution for Storj storage nodes that collects disk sp
 | Variable | Description | Default | Example |
 |----------|-------------|---------|---------|
 | `STORAGE_NODES` | Comma-separated list of storage node addresses | Required | `node1:14002,node2:14002` |
-| `GRAPH_HISTORY` | Time period for graph display (minus sign added automatically) | `5weeks` | `60d`, `1y`, `720h` |
-| `GRAPH_WIDTH` | Graph width in pixels | `1200` | `900`, `1600` |
-| `GRAPH_HEIGHT` | Graph height in pixels | `600` | `400`, `800` |
+| `GRAPH1_HISTORY` | History for first graph (minus sign added automatically) | `5weeks` | `30d`, `1y`, `720h` |
+| `GRAPH1_WIDTH` | Width of first graph in pixels | `1200` | `1000`, `1600` |
+| `GRAPH1_HEIGHT` | Height of first graph in pixels | `600` | `250`, `800` |
+| `GRAPH2_HISTORY` | History for second graph (minus sign added automatically) | `5weeks` | `30d`, `1y`, `720h` |
+| `GRAPH2_WIDTH` | Width of second graph in pixels | `1200` | `1000`, `1600` |
+| `GRAPH2_HEIGHT` | Height of second graph in pixels | `600` | `250`, `800` |
+
 
 ### Graph History Format
 
-The `GRAPH_HISTORY` variable accepts RRDtool time formats. **Note**: The minus sign is automatically added, so specify the value without it:
+The `GRAPH1_HISTORY` and `GRAPH2_HISTORY` variables accept RRDtool time formats. **Note**: The minus sign is automatically added, so specify the value without it:
 - `60d` - 60 days
 - `5weeks` - 5 weeks
 - `1y` - 1 year
@@ -96,7 +100,7 @@ The collector script (`collector.php`) runs automatically every 15 minutes and:
 
 3. Updates the RRD database (`/data/db.rrd`)
 
-4. Generates a new graph (`graph.png`)
+4. Generates two graphs (`graph1.png` and `graph2.png`)
 
 ## Data Storage
 
@@ -119,12 +123,14 @@ The RRD database is stored in the `./data` directory (mounted as a volume) and p
 ```
 StorageNodesGraph/
 ├── collector.php          # Data collection script
-├── index.php              # Web interface
+├── index.html             # Web interface
 ├── entrypoint.sh          # Container startup script
 ├── Dockerfile             # Container image definition
 ├── compose.yaml           # Docker Compose configuration
 ├── compose.override.yaml  # User-specific overrides (gitignored)
 ├── favicon.png            # Website favicon
+├── graph1.png             # Disk-space graph (generated)
+├── graph2.png             # Earnings graph (generated)
 ├── data/                  # RRD database storage (gitignored)
 │   └── db.rrd
 └── README.md              # This file
@@ -132,11 +138,11 @@ StorageNodesGraph/
 
 ## Web Interface
 
-The web interface (`index.php`) displays:
-- A graph showing disk space and earnings trends with dark theme (black background)
-- Auto-refresh every 5 minutes
-- Current values displayed on the graph
-- Black background matching the graph theme
+The web interface (`index.html`) displays two images:
+1. **Graph 1** – disk-space usage over time (available vs. used)
+2. **Graph 2** – expected monthly earnings over time
+
+Both graphs refresh every 5 minutes and use a dark theme (black background) with white labels and colorful data lines.
 
 Access it at `http://localhost:8080` (or your configured port).
 
