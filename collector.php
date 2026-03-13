@@ -41,7 +41,7 @@ if (!file_exists($rrddb)) {
     }
 }
 
-$diskSpaceAvailable = 0;
+$diskSpaceAllocated = 0;
 $diskSpaceUsed = 0;
 $currentMonthExpectations = 0;
 
@@ -50,7 +50,7 @@ foreach ($nodes as $node) {
     $url = "http://$node/api/sno/";
     $data = curl($url);
     if ($data !== false) {
-        $diskSpaceAvailable += $data['diskSpace']['available'];
+        $diskSpaceAllocated += $data['diskSpace']['allocated'] ?? $data['diskSpace']['available'];
         $diskSpaceUsed += $data['diskSpace']['used'];
     } else {
         echo "Failed to retrieve disk space data from node: $node", PHP_EOL;
@@ -66,17 +66,17 @@ foreach ($nodes as $node) {
 }
 
 // Formatting
-$diskSpaceAvailable = round($diskSpaceAvailable / pow(1000, 4), 3);
+$diskSpaceAllocated = round($diskSpaceAllocated / pow(1000, 4), 3);
 $diskSpaceUsed = round($diskSpaceUsed / pow(1000, 4), 3);
 $currentMonthExpectations = round($currentMonthExpectations / 100, 2);
 
 // Output
-echo "diskSpaceAvailable: $diskSpaceAvailable TB", PHP_EOL;
+echo "diskSpaceAllocated: $diskSpaceAllocated TB", PHP_EOL;
 echo "diskSpaceUsed: $diskSpaceUsed TB", PHP_EOL;
 echo "currentMonthExpectations: $$currentMonthExpectations", PHP_EOL;
 
 // Update RRDDb
-$updateCommand = "rrdtool update $rrddb N:$diskSpaceAvailable:$diskSpaceUsed:$currentMonthExpectations";
+$updateCommand = "rrdtool update $rrddb N:$diskSpaceAllocated:$diskSpaceUsed:$currentMonthExpectations";
 exec($updateCommand, $updateOutput, $updateReturnVar);
 if ($updateReturnVar !== 0) {
     echo "Failed to update RRD database: ", implode("\n", $updateOutput), PHP_EOL;
