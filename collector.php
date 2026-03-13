@@ -28,12 +28,14 @@ $rrddb = '/data/db.rrd';
 // Create RRDDb if not exists
 if (!file_exists($rrddb)) {
     $command = "rrdtool create $rrddb --step 900 "
-        . "DS:diskAvail:GAUGE:1800:0:U "
+        . "DS:diskAlloc:GAUGE:1800:0:U "
         . "DS:diskUsed:GAUGE:1800:0:U "
         . "DS:monthExpect:GAUGE:1800:0:U "
-        . "RRA:LAST:0.5:1:96 "
-        . "RRA:AVERAGE:0.5:4:168 "
-        . "RRA:AVERAGE:0.5:96:365";
+        . "RRA:LAST:0.5:15m:1d "
+        . "RRA:AVERAGE:0.5:1h:1w "
+        . "RRA:AVERAGE:0.5:1d:1y "
+        . "RRA:MAX:0.5:1h:1w "
+        . "RRA:MAX:0.5:1d:1y";
     exec($command, $output, $return_var);
     if ($return_var !== 0) {
         echo "Failed to create RRD database: ", implode("\n", $output), PHP_EOL;
@@ -105,18 +107,18 @@ for ($i = 1; $i <= 2; $i++) {
         . "--color FONT#FFFFFF "
         . "--color GRID#333333 "
         . "--color MGRID#666666 "
-        . "--title='Disk Space & Expected Earnings ($graphHistory)' "
+        . "--title='Disk Space & Expected Payout ($graphHistory)' "
         . "--vertical-label='TB / USD' "
-        . "DEF:avail=$rrddb:diskAvail:AVERAGE "
+        . "DEF:alloc=$rrddb:diskAlloc:MAX "
         . "DEF:used=$rrddb:diskUsed:AVERAGE "
         . "DEF:expect=$rrddb:monthExpect:AVERAGE "
-        . "LINE2:avail#00FF00:'Disk Available (TB)' "
+        . "LINE2:alloc#00FF00:'Disk Allocated (TB)' "
         . "LINE2:used#0000FF:'Disk Used (TB)' "
-        . "LINE2:expect#FF9900:'Month Earnings (\$)' "
+        . "LINE2:expect#FF9900:'Month Payout (\$)' "
         . "COMMENT:'\\n' "
-        . "GPRINT:avail:LAST:'Avail Now\: %6.2lf TB' "
+        . "GPRINT:alloc:LAST:'Allocated Now\: %6.2lf TB' "
         . "GPRINT:used:LAST:'Used Now\: %6.2lf TB' "
-        . "GPRINT:expect:LAST:'Earn Now\: \$%6.2lf\\n'";
+        . "GPRINT:expect:LAST:'Payout Now\: \$%6.2lf\\n'";
     exec($graphCommand, $graphOutput, $graphReturnVar);
     if ($graphReturnVar !== 0) {
         echo "Failed to generate RRD graph: ", implode("\n", $graphOutput), PHP_EOL;

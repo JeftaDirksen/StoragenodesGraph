@@ -16,7 +16,7 @@ trap cleanup SIGTERM SIGINT
 # Start collector in background (runs every 15 minutes)
 while true; do
     php /var/www/html/collector.php
-    sleep 900  # 15 minutes
+    sleep 900
 done &
 COLLECTOR_PID=$!
 
