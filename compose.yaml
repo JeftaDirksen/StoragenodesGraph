@@ -15,3 +15,5 @@ services:
       - GRAPH2_HISTORY=5weeks
       - GRAPH2_WIDTH=1000
       - GRAPH2_HEIGHT=250
+      - NVG_URL=
+      - NVG_SECRET=mysecretkey

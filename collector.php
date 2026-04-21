@@ -77,6 +77,24 @@ echo "diskSpaceAllocated: $diskSpaceAllocated TB", PHP_EOL;
 echo "diskSpaceUsed: $diskSpaceUsed TB", PHP_EOL;
 echo "currentMonthExpectations: $$currentMonthExpectations", PHP_EOL;
 
+// Send data to Numeric Values Graphing (if enabled)
+$nvgUrl = getenv("NVG_URL");
+$nvgSecret = getenv("NVG_SECRET");
+if ($nvgUrl && $nvgSecret) {
+    $nvgData = [
+        'secret' => $nvgSecret,
+        'disk-allocated' => $diskSpaceAllocated,
+        'disk-used' => $diskSpaceUsed,
+        'expected-payout' => $currentMonthExpectations
+    ];
+    $ch = curl_init($nvgUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $nvgData);
+    $nvgOutput = curl_exec($ch);
+    echo "Sent data to NVG: ", $nvgOutput;
+}
+
 // Update RRDDb
 $updateCommand = "rrdtool update $rrddb N:$diskSpaceAllocated:$diskSpaceUsed:$currentMonthExpectations";
 exec($updateCommand, $updateOutput, $updateReturnVar);
